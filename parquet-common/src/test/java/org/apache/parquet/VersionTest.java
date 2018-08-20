@@ -22,6 +22,7 @@ import org.apache.parquet.VersionParser.ParsedVersion;
 import org.apache.parquet.VersionParser.VersionParseException;
 import org.junit.Test;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -54,7 +55,7 @@ public class VersionTest {
     assertEquals(Version.VERSION_NUMBER, version.version);
     assertEquals("parquet-mr", version.application);
   }
-  
+
   @Test
   public void testVersionParser() throws Exception {
     assertEquals(new ParsedVersion("parquet-mr", "1.6.0", "abcd"),

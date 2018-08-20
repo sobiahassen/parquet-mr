@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +18,7 @@
  */
 package org.apache.parquet.proto;
 
+import com.google.protobuf.Descriptors;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageOrBuilder;
 import org.apache.hadoop.fs.Path;
@@ -49,6 +50,24 @@ public class ProtoParquetWriter<T extends MessageOrBuilder> extends ParquetWrite
             compressionCodecName, blockSize, pageSize);
   }
 
+
+  /**
+   * Create a new {@link ProtoParquetWriter}.
+   *
+   * @param file                 The file name to write to.
+   * @param protoMessage         Protobuf message class
+   * @param descriptor           Protobuf message descriptor
+   * @param compressionCodecName Compression code to use, or CompressionCodecName.UNCOMPRESSED
+   * @param blockSize            HDFS block size
+   * @param pageSize             See parquet write up. Blocks are subdivided into pages for alignment and other purposes.
+   * @throws IOException if there is an error while writing
+   */
+  public ProtoParquetWriter(Path file, Class<? extends Message> protoMessage, Descriptors.Descriptor descriptor,
+                            CompressionCodecName compressionCodecName, int blockSize,
+                            int pageSize) throws IOException {
+    super(file, new ProtoWriteSupport(protoMessage, descriptor),
+      compressionCodecName, blockSize, pageSize);
+  }
   /**
    * Create a new {@link ProtoParquetWriter}.
    *

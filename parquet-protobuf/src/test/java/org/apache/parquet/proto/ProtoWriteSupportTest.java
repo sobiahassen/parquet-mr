@@ -18,6 +18,7 @@
  */
 package org.apache.parquet.proto;
 
+import com.google.protobuf.Descriptors;
 import com.google.protobuf.Message;
 import org.apache.hadoop.conf.Configuration;
 import org.junit.Test;
@@ -34,8 +35,19 @@ public class ProtoWriteSupportTest {
     return createReadConsumerInstance(cls, readConsumerMock, new Configuration());
   }
 
+  private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(Class<T> cls, RecordConsumer readConsumerMock, Descriptors.Descriptor descriptor) {
+    return createReadConsumerInstance(cls, readConsumerMock, new Configuration(), descriptor);
+  }
+
   private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(Class<T> cls, RecordConsumer readConsumerMock, Configuration conf) {
     ProtoWriteSupport support = new ProtoWriteSupport(cls);
+    support.init(conf);
+    support.prepareForWrite(readConsumerMock);
+    return support;
+  }
+
+  private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(Class<T> cls, RecordConsumer readConsumerMock, Configuration conf, Descriptors.Descriptor descriptor) {
+    ProtoWriteSupport support = new ProtoWriteSupport(cls, descriptor);
     support.init(conf);
     support.prepareForWrite(readConsumerMock);
     return support;
