@@ -65,7 +65,7 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
     this.protoMessage = protobufClass;
   }
 
-  public ProtoWriteSupport(Class<? extends Message> protobufClass, Descriptors.Descriptor messageDescriptor) {
+  public ProtoWriteSupport(Descriptors.Descriptor messageDescriptor) {
     this.messageDesriptor = messageDescriptor;
   }
 

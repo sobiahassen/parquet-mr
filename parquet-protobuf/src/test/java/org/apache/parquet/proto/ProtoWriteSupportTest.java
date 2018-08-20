@@ -35,8 +35,8 @@ public class ProtoWriteSupportTest {
     return createReadConsumerInstance(cls, readConsumerMock, new Configuration());
   }
 
-  private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(Class<T> cls, RecordConsumer readConsumerMock, Descriptors.Descriptor descriptor) {
-    return createReadConsumerInstance(cls, readConsumerMock, new Configuration(), descriptor);
+  private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(RecordConsumer readConsumerMock, Descriptors.Descriptor descriptor) {
+    return createReadConsumerInstance(readConsumerMock, new Configuration(), descriptor);
   }
 
   private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(Class<T> cls, RecordConsumer readConsumerMock, Configuration conf) {
@@ -46,8 +46,8 @@ public class ProtoWriteSupportTest {
     return support;
   }
 
-  private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(Class<T> cls, RecordConsumer readConsumerMock, Configuration conf, Descriptors.Descriptor descriptor) {
-    ProtoWriteSupport support = new ProtoWriteSupport(cls, descriptor);
+  private <T extends Message> ProtoWriteSupport<T> createReadConsumerInstance(RecordConsumer readConsumerMock, Configuration conf, Descriptors.Descriptor descriptor) {
+    ProtoWriteSupport support = new ProtoWriteSupport(descriptor);
     support.init(conf);
     support.prepareForWrite(readConsumerMock);
     return support;
@@ -56,6 +56,27 @@ public class ProtoWriteSupportTest {
   @Test
   public void testSimplestMessage() throws Exception {
     RecordConsumer readConsumerMock =  Mockito.mock(RecordConsumer.class);
+    ProtoWriteSupport instance = createReadConsumerInstance(TestProtobuf.InnerMessage.class, readConsumerMock);
+
+    TestProtobuf.InnerMessage.Builder msg = TestProtobuf.InnerMessage.newBuilder();
+    msg.setOne("oneValue");
+
+    instance.write(msg.build());
+
+    InOrder inOrder = Mockito.inOrder(readConsumerMock);
+
+    inOrder.verify(readConsumerMock).startMessage();
+    inOrder.verify(readConsumerMock).startField("one", 0);
+    inOrder.verify(readConsumerMock).addBinary(Binary.fromString("oneValue"));
+    inOrder.verify(readConsumerMock).endField("one", 0);
+
+    inOrder.verify(readConsumerMock).endMessage();
+    Mockito.verifyNoMoreInteractions(readConsumerMock);
+  }
+
+  @Test
+  public void testSimplestMessageWithDescriptor() throws Exception {
+    RecordConsumer readConsumerMock = Mockito.mock(RecordConsumer.class);
     ProtoWriteSupport instance = createReadConsumerInstance(TestProtobuf.InnerMessage.class, readConsumerMock);
 
     TestProtobuf.InnerMessage.Builder msg = TestProtobuf.InnerMessage.newBuilder();

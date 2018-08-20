@@ -55,17 +55,16 @@ public class ProtoParquetWriter<T extends MessageOrBuilder> extends ParquetWrite
    * Create a new {@link ProtoParquetWriter}.
    *
    * @param file                 The file name to write to.
-   * @param protoMessage         Protobuf message class
    * @param descriptor           Protobuf message descriptor
    * @param compressionCodecName Compression code to use, or CompressionCodecName.UNCOMPRESSED
    * @param blockSize            HDFS block size
    * @param pageSize             See parquet write up. Blocks are subdivided into pages for alignment and other purposes.
    * @throws IOException if there is an error while writing
    */
-  public ProtoParquetWriter(Path file, Class<? extends Message> protoMessage, Descriptors.Descriptor descriptor,
+  public ProtoParquetWriter(Path file, Descriptors.Descriptor descriptor,
                             CompressionCodecName compressionCodecName, int blockSize,
                             int pageSize) throws IOException {
-    super(file, new ProtoWriteSupport(protoMessage, descriptor),
+    super(file, new ProtoWriteSupport(descriptor),
       compressionCodecName, blockSize, pageSize);
   }
   /**
