@@ -66,6 +66,7 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
   }
 
   public ProtoWriteSupport(Descriptors.Descriptor messageDescriptor) {
+    System.out.println("HEllo " + messageDescriptor);
     this.messageDesriptor = messageDescriptor;
   }
 
@@ -130,6 +131,7 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
 
       writeSpecsCompliant = configuration.getBoolean(PB_SPECS_COMPLIANT_WRITE, writeSpecsCompliant);
       MessageType rootSchema = new ProtoSchemaConverter(writeSpecsCompliant).convert(protoMessage);
+
       Descriptor messageDescriptor = Protobufs.getMessageDescriptor(protoMessage);
       validatedMapping(messageDescriptor, rootSchema);
 
@@ -137,7 +139,9 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
 
       Map<String, String> extraMetaData = new HashMap<String, String>();
       extraMetaData.put(ProtoReadSupport.PB_CLASS, protoMessage.getName());
+      System.out.println("protoMessage.getName " + protoMessage.getName() + " %%%%%%%%%%%%%%%%%");
       extraMetaData.put(ProtoReadSupport.PB_DESCRIPTOR, serializeDescriptor(protoMessage));
+
       extraMetaData.put(PB_SPECS_COMPLIANT_WRITE, String.valueOf(writeSpecsCompliant));
       return new WriteContext(rootSchema, extraMetaData);
     }
@@ -149,8 +153,10 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
       this.messageWriter = new MessageWriter(messageDesriptor, rootSchema);
 
       Map<String, String> extraMetaData = new HashMap<String, String>();
-      extraMetaData.put(ProtoReadSupport.PB_CLASS, protoMessage.getName());
+      extraMetaData.put(ProtoReadSupport.PB_CLASS, messageDesriptor.getFullName());
+      System.out.println("messageDesriptor.getFullName()) " + "00000 " + messageDesriptor.getFullName());
       extraMetaData.put(ProtoReadSupport.PB_DESCRIPTOR, TextFormat.printToString(messageDesriptor.toProto()));
+
       extraMetaData.put(PB_SPECS_COMPLIANT_WRITE, String.valueOf(writeSpecsCompliant));
       return new WriteContext(rootSchema, extraMetaData);
 

@@ -77,7 +77,7 @@ public class ProtoWriteSupportTest {
   @Test
   public void testSimplestMessageWithDescriptor() throws Exception {
     RecordConsumer readConsumerMock = Mockito.mock(RecordConsumer.class);
-    ProtoWriteSupport instance = createReadConsumerInstance(TestProtobuf.InnerMessage.class, readConsumerMock);
+    ProtoWriteSupport instance = createReadConsumerInstance(readConsumerMock, TestProtobuf.InnerMessage.getDescriptor());
 
     TestProtobuf.InnerMessage.Builder msg = TestProtobuf.InnerMessage.newBuilder();
     msg.setOne("oneValue");
