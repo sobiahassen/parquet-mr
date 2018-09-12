@@ -762,6 +762,7 @@ public class ParquetFileReader implements Closeable {
     paths.clear();
     for (ColumnDescriptor col : projection.getColumns()) {
       paths.put(ColumnPath.get(col.getPath()), col);
+      System.out.println("parquet file reader setrequestedSchema");
     }
   }
 

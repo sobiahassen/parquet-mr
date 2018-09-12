@@ -84,6 +84,7 @@ class InternalParquetRecordWriter<T> {
       BytesCompressor compressor,
       boolean validating,
       ParquetProperties props) {
+    System.out.println("Internal Parquet Writer gets called");
     this.parquetFileWriter = parquetFileWriter;
     this.writeSupport = checkNotNull(writeSupport, "writeSupport");
     this.schema = schema;

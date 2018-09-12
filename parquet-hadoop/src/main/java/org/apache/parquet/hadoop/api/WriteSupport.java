@@ -53,6 +53,8 @@ abstract public class WriteSupport<T> {
       super();
       this.schema = checkNotNull(schema, "schema");
       this.extraMetaData = Collections.unmodifiableMap(checkNotNull(extraMetaData, "extraMetaData"));
+      System.out.println(this.schema+ "schema");
+      System.out.println(this.extraMetaData +  " ExtrametaData");
     }
     /**
      * @return the schema of the file

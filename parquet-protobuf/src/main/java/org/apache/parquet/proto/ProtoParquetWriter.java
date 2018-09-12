@@ -48,6 +48,8 @@ public class ProtoParquetWriter<T extends MessageOrBuilder> extends ParquetWrite
                             int pageSize) throws IOException {
     super(file, new ProtoWriteSupport(protoMessage),
             compressionCodecName, blockSize, pageSize);
+    System.out.println("PPW with 5 args get called");
+    System.out.println(protoMessage + "protoMessage");
   }
 
 

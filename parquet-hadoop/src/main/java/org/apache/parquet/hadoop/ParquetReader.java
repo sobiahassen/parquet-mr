@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -65,6 +65,7 @@ public class ParquetReader<T> implements Closeable {
   @Deprecated
   public ParquetReader(Path file, ReadSupport<T> readSupport) throws IOException {
     this(new Configuration(), file, readSupport, FilterCompat.NOOP);
+    System.out.println("ParquetReader with two args gets called");
   }
 
   /**
@@ -121,6 +122,8 @@ public class ParquetReader<T> implements Closeable {
     this.readSupport = readSupport;
     this.options = options;
     this.filesIterator = files.iterator();
+    System.out.println("parquet reader works fine");
+
   }
 
   /**
@@ -150,6 +153,7 @@ public class ParquetReader<T> implements Closeable {
       InputFile file = filesIterator.next();
 
       ParquetFileReader fileReader = ParquetFileReader.open(file, options);
+      System.out.println(fileReader + "The file writer");
 
       reader = new InternalParquetRecordReader<>(readSupport, options.getRecordFilter());
 

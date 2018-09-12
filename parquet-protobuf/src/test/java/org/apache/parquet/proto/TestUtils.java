@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -42,10 +42,14 @@ public class TestUtils {
 
   public static <T extends MessageOrBuilder> List<T> writeAndRead(T... records) throws IOException {
     Class<? extends Message> cls = inferRecordsClass(records);
+    System.out.println("inferRecordsClass works fine");
 
     Path file = writeMessages(cls, records);
+    System.out.println("writeMessages works fine");
+
 
     return readMessages(file);
+
   }
 
   public static Class<? extends Message> inferRecordsClass(MessageOrBuilder[] records) {
@@ -75,11 +79,16 @@ public class TestUtils {
    */
   public static <T extends  MessageOrBuilder> List<T> testData(T... messages) throws IOException {
 
+    System.out.println("reached the test data method");
+
     checkSameBuilderInstance(messages);
+    System.out.println("checkSameBuilder works fine");
 
     List<MessageOrBuilder> input = cloneList(messages);
+    System.out.println("cloneList works fine");
 
     List<MessageOrBuilder> output = (List<MessageOrBuilder>) writeAndRead(messages);
+    System.out.println("**writeAndRead works fine**");
 
     List<Message> outputAsMessages = asMessages(output);
     assertEquals("The protocol buffers are not same:\n", asMessages(input), outputAsMessages);
@@ -146,6 +155,7 @@ public class TestUtils {
    */
   public static <T extends MessageOrBuilder> List<T> readMessages(Path file) throws IOException {
     ProtoParquetReader<T> reader = new ProtoParquetReader<T>(file);
+    System.out.println(" reader " + reader.toString());
 
     List<T> result = new ArrayList<T>();
     boolean hasNext = true;
@@ -159,6 +169,7 @@ public class TestUtils {
         result.add((T) asMessage(item).toBuilder());
       }
     }
+    System.out.println("**result**" +  result);
     reader.close();
     return result;
   }
@@ -172,6 +183,7 @@ public class TestUtils {
 
   public static Path writeMessages(Class<? extends Message> cls, MessageOrBuilder... records) throws IOException {
     Path file = someTemporaryFilePath();
+    System.out.println("someTemporaryFilePAth works fine");
 
     ProtoParquetWriter<MessageOrBuilder> writer =
             new ProtoParquetWriter<MessageOrBuilder>(file, cls);

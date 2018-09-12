@@ -88,7 +88,9 @@ public class ProtoRecordConverterTest {
 
   @Test
   public void testProto3AllTypes() throws Exception {
+    System.out.println(" the first line ");
     TestProto3.SchemaConverterAllDatatypes.Builder data;
+    System.out.println(" the second line ");
     data = TestProto3.SchemaConverterAllDatatypes.newBuilder();
 
     data.setOptionalBool(true);
@@ -108,15 +110,20 @@ public class ProtoRecordConverterTest {
     data.setOptionalUInt32(1000 * 1000 * 8);
     data.setOptionalUInt64(1000L * 1000 * 1000 * 9);
     data.getOptionalMessageBuilder().setSomeId(1984);
+    System.out.println(data + "The data");
 
     TestProto3.SchemaConverterAllDatatypes dataBuilt = data.build();
+    System.out.println("works fine till here");
     data.clear();
 
     List<TestProto3.SchemaConverterAllDatatypes> result;
+    System.out.println(dataBuilt + "datat built");
     result = testData(dataBuilt);
-
+    System.out.println(result + "**RESULT**");
+    System.out.println("All works fine till here");
     //data are fully checked in testData function. Lets do one more check.
     TestProto3.SchemaConverterAllDatatypes o = result.get(0);
+    System.out.println(o + "**O**");
     assertEquals("Good Will Hunting", o.getOptionalString());
 
     assertEquals(true, o.getOptionalBool());

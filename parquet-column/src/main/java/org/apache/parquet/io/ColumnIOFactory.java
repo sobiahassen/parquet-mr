@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -43,7 +43,7 @@ public class ColumnIOFactory {
     private int currentRequestedIndex;
     private Type currentRequestedType;
     private boolean strictTypeChecking;
-    
+
     private ColumnIOCreatorVisitor(boolean validating, MessageType requestedSchema, String createdBy, boolean strictTypeChecking) {
       this.validating = validating;
       this.requestedSchema = requestedSchema;
@@ -88,7 +88,7 @@ public class ColumnIOFactory {
 
     @Override
     public void visit(PrimitiveType primitiveType) {
-      if (!currentRequestedType.isPrimitive() || 
+      if (!currentRequestedType.isPrimitive() ||
               (this.strictTypeChecking && currentRequestedType.asPrimitiveType().getPrimitiveTypeName() != primitiveType.getPrimitiveTypeName())) {
         incompatibleSchema(primitiveType, currentRequestedType);
       }
@@ -140,6 +140,8 @@ public class ColumnIOFactory {
     super();
     this.createdBy = createdBy;
     this.validating = validating;
+    System.out.println(this.createdBy + "created by");
+    System.out.println("In class column IO factory");
   }
 
   /**
@@ -150,7 +152,7 @@ public class ColumnIOFactory {
   public MessageColumnIO getColumnIO(MessageType requestedSchema, MessageType fileSchema) {
     return getColumnIO(requestedSchema, fileSchema, true);
   }
-  
+
   /**
    * @param requestedSchema the requestedSchema we want to read/write
    * @param fileSchema the file schema (when reading it can be different from the requested schema)

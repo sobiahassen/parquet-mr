@@ -59,10 +59,12 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
   private Descriptors.Descriptor messageDesriptor;
 
   public ProtoWriteSupport() {
+    System.out.println("the protowriter wihtout the constructor get called");
   }
 
   public ProtoWriteSupport(Class<? extends Message> protobufClass) {
     this.protoMessage = protobufClass;
+    System.out.println("PWS with protoBufClass gets called");
   }
 
   public ProtoWriteSupport(Descriptors.Descriptor messageDescriptor) {
@@ -77,6 +79,9 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
 
   public static void setSchema(Configuration configuration, Class<? extends Message> protoClass) {
     configuration.setClass(PB_CLASS_WRITE, protoClass, Message.class);
+    System.out.println(PB_CLASS_WRITE + " * PB_CLASS_WRITE" + "\n"
+    + protoClass + " * protoClass " + "\n" + Message.class + "Message.class");
+    System.out.println("The class is set now");
   }
 
   /**
@@ -111,14 +116,15 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
   @Override
   public void prepareForWrite(RecordConsumer recordConsumer) {
     this.recordConsumer = recordConsumer;
+    System.out.println("prepareForWrite of protoWriteSupport gets called");
   }
 
   @Override
   public WriteContext init(Configuration configuration) {
     // if no protobuf descriptor was given in constructor, load descriptor from configuration (set with setProtobufClass)
-
-    if (messageDesriptor == null) {
-      if (protoMessage == null) {
+    System.out.println("Proto write support init gets called");
+//    if (messageDesriptor == null) {
+      if (protoMessage == null && messageDesriptor == null) {
         Class<? extends Message> pbClass = configuration.getClass(PB_CLASS_WRITE, null, Message.class);
         if (pbClass != null) {
           protoMessage = pbClass;
@@ -129,23 +135,26 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
         }
       }
 
-      writeSpecsCompliant = configuration.getBoolean(PB_SPECS_COMPLIANT_WRITE, writeSpecsCompliant);
-      MessageType rootSchema = new ProtoSchemaConverter(writeSpecsCompliant).convert(protoMessage);
+      if (messageDesriptor == null) {
+        this.messageDesriptor = Protobufs.getMessageDescriptor(protoMessage);
+      }
 
-      Descriptor messageDescriptor = Protobufs.getMessageDescriptor(protoMessage);
-      validatedMapping(messageDescriptor, rootSchema);
-
-      this.messageWriter = new MessageWriter(messageDescriptor, rootSchema);
-
-      Map<String, String> extraMetaData = new HashMap<String, String>();
-      extraMetaData.put(ProtoReadSupport.PB_CLASS, protoMessage.getName());
-      System.out.println("protoMessage.getName " + protoMessage.getName() + " %%%%%%%%%%%%%%%%%");
-      extraMetaData.put(ProtoReadSupport.PB_DESCRIPTOR, serializeDescriptor(protoMessage));
-
-      extraMetaData.put(PB_SPECS_COMPLIANT_WRITE, String.valueOf(writeSpecsCompliant));
-      return new WriteContext(rootSchema, extraMetaData);
-    }
-    else {
+//      writeSpecsCompliant = configuration.getBoolean(PB_SPECS_COMPLIANT_WRITE, writeSpecsCompliant);
+//      MessageType rootSchema = new ProtoSchemaConverter(writeSpecsCompliant).convert(protoMessage);
+//
+//      Descriptor messageDescriptor = Protobufs.getMessageDescriptor(protoMessage);
+//      validatedMapping(messageDescriptor, rootSchema);
+//
+//      this.messageWriter = new MessageWriter(messageDescriptor, rootSchema);
+//
+//      Map<String, String> extraMetaData = new HashMap<String, String>();
+//      extraMetaData.put(ProtoReadSupport.PB_CLASS, protoMessage.getName());
+//      System.out.println("protoMessage.getName " + protoMessage.getName() + " %%%%%%%%%%%%%%%%%");
+//      extraMetaData.put(ProtoReadSupport.PB_DESCRIPTOR, serializeDescriptor(protoMessage));
+//
+//      extraMetaData.put(PB_SPECS_COMPLIANT_WRITE, String.valueOf(writeSpecsCompliant));
+//      return new WriteContext(rootSchema, extraMetaData);
+//    }
       writeSpecsCompliant = configuration.getBoolean(PB_SPECS_COMPLIANT_WRITE, writeSpecsCompliant);
       MessageType rootSchema = new ProtoSchemaConverter(writeSpecsCompliant).convert(messageDesriptor);
       validatedMapping(messageDesriptor, rootSchema);
@@ -160,7 +169,6 @@ public class ProtoWriteSupport<T extends MessageOrBuilder> extends WriteSupport<
       extraMetaData.put(PB_SPECS_COMPLIANT_WRITE, String.valueOf(writeSpecsCompliant));
       return new WriteContext(rootSchema, extraMetaData);
 
-    }
   }
 
   class FieldWriter {

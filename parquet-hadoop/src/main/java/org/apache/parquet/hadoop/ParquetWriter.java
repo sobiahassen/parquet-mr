@@ -274,12 +274,15 @@ public class ParquetWriter<T> implements Closeable {
       int maxPaddingSize,
       ParquetProperties encodingProps) throws IOException {
 
+    System.out.println("ParquetWriter constructor got called");
+
     WriteSupport.WriteContext writeContext = writeSupport.init(conf);
 
     MessageType schema = writeContext.getSchema();
 
     ParquetFileWriter fileWriter = new ParquetFileWriter(
         file, schema, mode, rowGroupSize, maxPaddingSize);
+
     fileWriter.start();
 
     this.codecFactory = new CodecFactory(conf, encodingProps.getPageSizeThreshold());
@@ -298,6 +301,8 @@ public class ParquetWriter<T> implements Closeable {
   public void write(T object) throws IOException {
     try {
       writer.write(object);
+      System.out.println(" ParquetWriter write got called");
+
     } catch (InterruptedException e) {
       throw new IOException(e);
     }

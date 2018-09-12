@@ -86,6 +86,7 @@ class InternalParquetRecordReader<T> {
    * @param filter for filtering individual records
    */
   public InternalParquetRecordReader(ReadSupport<T> readSupport, Filter filter) {
+    System.out.println("in Internal parquet reader");
     this.readSupport = readSupport;
     this.filter = checkNotNull(filter, "filter");
   }
@@ -154,6 +155,7 @@ class InternalParquetRecordReader<T> {
 
   public T getCurrentValue() throws IOException,
   InterruptedException {
+    System.out.println("reader.getCurrentValue");
     return currentValue;
   }
 
@@ -178,11 +180,14 @@ class InternalParquetRecordReader<T> {
     Map<String, String> fileMetadata = parquetFileMetadata.getKeyValueMetaData();
     ReadSupport.ReadContext readContext = readSupport.init(new InitContext(conf, toSetMultiMap(fileMetadata), fileSchema));
     this.columnIOFactory = new ColumnIOFactory(parquetFileMetadata.getCreatedBy());
+    System.out.println(this.columnIOFactory + " Column IO Factory");
     this.requestedSchema = readContext.getRequestedSchema();
     this.columnCount = requestedSchema.getPaths().size();
+    System.out.println(readSupport.getClass()  + "Class of read support");
     this.recordConverter = readSupport.prepareForRead(conf, fileMetadata, fileSchema, readContext);
     this.strictTypeChecking = options.isEnabled(STRICT_TYPE_CHECKING, true);
     this.total = reader.getRecordCount();
+    System.out.println(reader.getRecordCount()+ "Record count");
     this.unmaterializableRecordCounter = new UnmaterializableRecordCounter(options, total);
     this.filterRecords = options.useRecordFilter();
     reader.setRequestedSchema(requestedSchema);

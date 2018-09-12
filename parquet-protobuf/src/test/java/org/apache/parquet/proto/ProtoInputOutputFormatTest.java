@@ -318,6 +318,7 @@ public class ProtoInputOutputFormatTest {
    */
   public static List<Message> runMRJobs(Message... messages) throws Exception {
     Path outputPath = new WriteUsingMR().write(messages);
+    System.out.println(outputPath + " the output path");
     List<Message> result = new ReadUsingMR().read(outputPath);
     return result;
   }
